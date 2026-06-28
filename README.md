@@ -25,9 +25,20 @@ make cleanall     # remove objects and binary
 ├── src/
 │   ├── main.cpp              # Entry point
 │   ├── main.hpp              # Application header
+│   ├── cmp/
+│   │   ├── entity.hpp        # Entity_t component
+│   │   └── entity.cpp
 │   ├── sys/
 │   │   ├── rendersystem.hpp  # RenderSystem (ECS)
 │   │   └── rendersystem.cpp
+│   ├── man/
+│   │   ├── entitymanager.hpp # EntityManager (ECS)
+│   │   ├── entitymanager.cpp
+│   │   ├── entity.hpp        # (legacy)
+│   │   └── entity.cpp        # (legacy)
+│   └── util/
+│       ├── gamecontext.hpp   # GameContext_t abstract base
+│       └── typealiases.hpp   # VecEntities_t alias
 │   ├── man/
 │   │   ├── entitymanager.hpp # EntityManager (ECS)
 │   │   ├── entitymanager.cpp
