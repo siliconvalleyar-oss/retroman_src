@@ -25,6 +25,7 @@ endef
 ################################################################################################
 ################################################################################################
 APP         := app
+BINDIR      := bin
 CFLAGS     := -Wall -pedantic
 CCFLAGS     	:= $(CCFLAGS) -std=c++17 -g
 CC          := g++
@@ -58,8 +59,8 @@ ALLOBJ 		:= $(foreach F,$(ALLCPPS) $(ALLCS),$(call C2O,$(F)))
 
 .PHONY: info libs libs-clean libs-cleanall
 #Generate APP
-$(APP) : $(OBJSUBDIRS) $(ALLOBJ)
-	$(CC) -o $(APP) $(ALLOBJ) $(LIBS)
+$(BINDIR)/$(APP) : $(OBJSUBDIRS) $(BINDIR) $(ALLOBJ)
+	$(CC) -o $(BINDIR)/$(APP) $(ALLOBJ) $(LIBS)
 
 #Generate rules for all objects
 $(foreach F,$(ALLCPPS),$(eval $(call COMPILE,$(CC),$(call C2O,$(F)),$(F),$(call C2H,$(F)),$(CCFLAGS) $(INCDIRS))))
@@ -76,14 +77,14 @@ info:
 	$(info $(OBJSUBDIRS))
 	
 
-$(OBJSUBDIRS):
-	$(MKDIR) $(OBJSUBDIRS) 
+$(OBJSUBDIRS) $(BINDIR):
+	$(MKDIR) $(OBJSUBDIRS) $(BINDIR)
 
 clean:
 	$(RM) -r "./$(OBJ)"
 
 cleanall: clean
-	$(RM) "./$(APP)"
+	$(RM) -r "./$(BINDIR)"
 libs:
 	$(MAKE)	-C $(LIBDIR)
 libs-clean:
