@@ -26,7 +26,6 @@ int main(void)
         ECS::EntityManager_t entityMan;
 
         // Spawn test entities with PNG sprites
-        // Spawn test entities (ensure png/ninja.png exists)
         entityMan.createEntity(20,  40, "png/ninja.png");
         entityMan.createEntity(80,  10, "png/ninja.png");
         entityMan.createEntity(200, 70, "png/ninja.png");
@@ -43,9 +42,9 @@ int main(void)
             collision.update(entityMan);
         }
     }
-    catch (...)
+    catch (std::exception const& e)
     {
-        std::cout << "break program" << std::endl;
+        std::cout << "Error: " << e.what() << std::endl;
     }
 
     return 0;

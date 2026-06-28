@@ -3,6 +3,7 @@ extern "C" {
 }
 
 #include <algorithm>
+#include <cstdint>
 #include <iostream>
 #include "rendersystem.hpp"
 #include "../man/entitymanager.hpp"
@@ -33,12 +34,28 @@ void RenderSystem_t::drawAllEntities(const Vect_t<Entity_t>& entities) const
     {
         if (!e.phy) return;
 
-        auto dst = screen + e.phy->y * m_w + e.phy->x;
-        auto src = begin(e.sprite);
+        // Clip position to framebuffer bounds
+        int32_t x0 = e.phy->x;
+        int32_t y0 = e.phy->y;
+        if (x0 >= static_cast<int32_t>(m_w)) return;
+        if (y0 >= static_cast<int32_t>(m_h)) return;
 
-        for (uint32_t row = 0; row < e.h; ++row, dst += m_w, src += e.w)
+        // Compute visible region
+        int32_t clipW = static_cast<int32_t>(e.w);
+        int32_t clipH = static_cast<int32_t>(e.h);
+        int32_t srcOff{0};
+        if (x0 < 0) { srcOff -= x0; clipW += x0; x0 = 0; }
+        if (y0 < 0) { srcOff -= static_cast<int32_t>(e.w) * (-y0); clipH += y0; y0 = 0; }
+        if (x0 + clipW > static_cast<int32_t>(m_w)) clipW = static_cast<int32_t>(m_w) - x0;
+        if (y0 + clipH > static_cast<int32_t>(m_h)) clipH = static_cast<int32_t>(m_h) - y0;
+        if (clipW <= 0 || clipH <= 0) return;
+
+        auto dst = screen + static_cast<std::size_t>(y0) * m_w + static_cast<std::size_t>(x0);
+        auto src = begin(e.sprite) + srcOff;
+
+        for (int32_t row = 0; row < clipH; ++row, dst += m_w, src += static_cast<std::size_t>(e.w))
         {
-            std::copy(src, src + e.w, dst);
+            std::copy(src, src + clipW, dst);
         }
     };
 
