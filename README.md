@@ -35,30 +35,30 @@ make cleanall     # remove objects and binary
 │   │   └── entity.cpp
 │   └── tinyPTC/              # tinyPTC display backends (source)
 ├── lib/tinyPTC/              # Precompiled static library (libtinyptc.a)
-├── docs/RULES.md             # Versioning rules
+├── docs/
+│   ├── RULES.md              # Versioning rules
+│   ├── ARCHITECTURE.md       # Full architecture documentation
+│   └── API.md                # Complete API reference
 ├── VERSION                   # Current version
 ├── Makefile                  # Build system
 └── .mimocode/skills/retroman/ # Project skill for MiMoCode
 ```
 
-## Architecture
+## Documentation
 
-- **ECS::RenderSystem_t** — Manages tinyPTC window, framebuffer rendering, and entity drawing
-- **ECS::EntityManager_t** — Entity lifecycle, creation, and sprite/color management
-- **ECS::Entity_t** — Individual entity component with position (x,y), dimensions (w,h), and pixel sprite
+| File | Description |
+|------|-------------|
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | System architecture, pipeline, dependency graph |
+| [`docs/API.md`](docs/API.md) | Complete API reference for all ECS types |
+| [`docs/RULES.md`](docs/RULES.md) | Versioning rules and validation scripts |
 
 ## Include Convention
 
-Relative quoted includes, not angle-bracket system-style:
-```cpp
-#include "sys/render.hpp"
-#include "man/entitymanager.hpp"
-#include "man/entity.hpp"
-```
+Relative quoted includes, not angle-bracket system-style. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md#include-convention).
 
 ## Versioning
 
-Version is defined in `VERSION` and mirrored as Git tags with `v` prefix (e.g. `v2.4.0`). See `docs/RULES.md`.
+Version is defined in `VERSION` and mirrored as Git tags with `v` prefix (e.g. `v2.4.0`). See [`docs/RULES.md`](docs/RULES.md).
 
 ## License
 

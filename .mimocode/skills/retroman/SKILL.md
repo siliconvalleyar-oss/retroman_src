@@ -62,6 +62,8 @@ Do NOT use angle-bracket system-style includes (`<sys/render.hpp>`) — use rela
 
 ## Architecture
 
+See [`docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md) for full documentation.
+
 | Component | File | Description |
 |-----------|------|-------------|
 | `ECS::RenderSystem_t` | `src/sys/render.hpp` | tinyPTC window, framebuffer, entity drawing |
@@ -72,6 +74,8 @@ Do NOT use angle-bracket system-style includes (`<sys/render.hpp>`) — use rela
 
 - `Makefile` — Build system with COMPILE/C2O/C2H macros, DEBUG mode
 - `docs/RULES.md` — Versioning rules and validation scripts
+- `docs/ARCHITECTURE.md` — Full architecture documentation
+- `docs/API.md` — Complete API reference
 - `VERSION` — Current version number (no `v` prefix)
 - `src/tinyPTC/` — tinyPTC display backends (xlib, xshm, xdbe)
 - `lib/tinyPTC/libtinyptc.a` — Precompiled static library
