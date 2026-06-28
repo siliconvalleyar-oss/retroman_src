@@ -79,10 +79,6 @@ info:
 $(OBJSUBDIRS):
 	$(MKDIR) $(OBJSUBDIRS) 
 
-dbg:
-	$(info $(ALLCS))
-	$(info $(ALLCSOBJ))
-
 clean:
 	$(RM) -r "./$(OBJ)"
 

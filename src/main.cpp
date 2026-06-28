@@ -1,29 +1,57 @@
 extern "C" {
     #include <tinyPTC/src/tinyptc.h>
 }
-#include <cstdint> // uint32_t
-//#include <iostream>
+#include <cstdint>
+#include <iostream>
+#include <memory>
+#include <sys/render.hpp>
 
-//using namespace std;
+constexpr uint32_t kSCRWIDTH { 480 };
+constexpr uint32_t kSCRHEIGHT { 272 };
 
-//crear un array
+//void function(void);
+int main(void){
+  
+  try{
+    ECS::RenderSystem_t render{ kSCRWIDTH , kSCRHEIGHT };
+    //function();
+    //while(!ptc_process_events());
+	while(render.update());
+  }
+  catch(...){
+    std::cout<< "break program"<<std::endl;
+  }
 
-int  width = 480;
-int height = 272;
-uint32_t screen[480 * 272];
-
-int main(){
-
-ptc_open("Juego",width,height);
-while(true){
-for(uint32_t i=0;i < (480*272);++i){
-        screen[i]=0x00999999;
-    }
-    
-    ptc_update(screen);
+  return 0;
 }
-ptc_close();
 
-//cout<< "my first program gamer " <<endl;
-return 0;
+
+
+
+
+void function(void)
+{/*
+auto x_screen = std::make_unique<uint32_t[]>( kSCRWIDTH * kSCRHEIGHT) ;
+ptc_open("wall",kSCRWIDTH,kSCRHEIGHT);
+  while (!ptc_process_events())
+  {
+    for(uint32_t i=0 ; i < kSCRWIDTH * kSCRHEIGHT ; ++i) x_screen[i]=0x00FF0000;
+    uint32_t *pscr = x_screen.get();
+    
+    const uint32_t *psp = sprite;
+
+    for(uint32_t i=0 ;i<8;++i){
+      for(uint32_t j=0 ;j<8;++j){
+        *pscr = *psp;
+        ++pscr;
+        ++psp;
+      }
+      pscr += 640-8;
+    }
+    ptc_update(x_screen.get());
+   
+  }
+
+  ptc_close();
+  */
 }
