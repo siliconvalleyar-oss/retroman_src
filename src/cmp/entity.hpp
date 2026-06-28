@@ -53,8 +53,8 @@ struct Entity_t
         }
     }
 
-    uint32_t x{0}, y{0};                ///< Screen position in pixels
-    uint32_t vx{1}, vy{1};              ///< Velocity in pixels per frame
+    int32_t x{0}, y{0};                 ///< Screen position in pixels
+    int32_t vx{1}, vy{1};               ///< Velocity in pixels per frame
     uint32_t w{0}, h{0};                ///< Sprite dimensions
 
     std::vector<uint32_t> sprite{};     ///< Packed pixel data (XRGB format)

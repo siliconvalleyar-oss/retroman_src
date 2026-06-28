@@ -12,8 +12,8 @@ struct PhysicsComponent_t
 {
     explicit PhysicsComponent_t() = default;
 
-    uint32_t x{0}, y{0};       ///< Position in pixels
-    uint32_t vx{1}, vy{1};     ///< Velocity in pixels per frame
+    int32_t x{0}, y{0};       ///< Position in pixels
+    int32_t vx{1}, vy{1};     ///< Velocity in pixels per frame
 };
 
 } // namespace ECS
