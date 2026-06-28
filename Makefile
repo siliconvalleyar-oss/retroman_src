@@ -33,6 +33,14 @@ SRC         := src
 OBJ         := obj
 LIBS		:= -lX11 -lXext
 
+#para el uso commando es make DEBUG=1
+ifdef DEBUG 
+	CFLAGS += -g
+else
+	CFLAGS += -O3
+endif
+
+
 ALLCPPS 	:= $(shell find src/ -type f -iname *.cpp)
 #ALLOCPPSOBJ  := $(patsubst %.cpp,%.o,$(ALLCPPS))
 ALLCS		:= $(shell find src/ -type f -iname *.c)
@@ -66,10 +74,6 @@ $(OBJSUBDIRS):
 	$(MKDIR) $(OBJSUBDIRS) 
 
 dbg:
-#		@echo "debugger"
-#$(info $(SRC)/main.cpp)
-#	@echo "debugger all cpp"
-#	$(info $(ALLCPP))
 	$(info $(ALLCS))
 	$(info $(ALLCSOBJ))
 
