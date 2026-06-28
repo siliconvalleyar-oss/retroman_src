@@ -1,8 +1,28 @@
-#gcc -o icon icon.c -L/usr/X11/lib -lX11 -lstdc++
-#find /src -type f iname *.cpp
-#find /src -type f name *.cpp
-#ls /usr/lib | grep X11
-
+################################################################################################
+########################################MACROS##################################################
+################################################################################################
+#$(1)
+#$(2)   Object file to generate
+#$(3)   Source file
+#$(4)   Additional dependencies
+#$(5)   Compiler flags
+define COMPILE
+$(2) : $(3) $(4)
+	$(1) -c -o $(2) $(3) $(5)
+endef
+#$(1)   Source file
+#$(1)   src/tinyPTC/xbcde.cpp
+#$(1)   obj/tinyPTC/xbcde.o
+define C2O
+$(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(patsubst $(SRC)%,$(OBJ)%,$(1))))
+endef
+#$(1) Source file
+define C2H
+$(patsubst %.c,%.h,$(patsubst %.cpp,%.hpp,$(1)))
+endef
+################################################################################################
+################################################################################################
+################################################################################################v
 APP         := app
 CCFLAGS     := -Wall -pedantic
 CFLAGS     	:= $(CCFLAGS)
@@ -13,33 +33,29 @@ SRC         := src
 OBJ         := obj
 LIBS		:= -lX11 -lXext
 
-ALLCPP 		:= $(shell find src/ -type f -iname *.cpp)
 ALLCPPS 	:= $(shell find src/ -type f -iname *.cpp)
-ALLCPPSOBJ	:= $(patsubst %.cpp,%.o,$(ALLCPPS))
-
-ALLC 		:= $(shell find src/ -type f -iname *.c)
+#ALLOCPPSOBJ  := $(patsubst %.cpp,%.o,$(ALLCPPS))
 ALLCS		:= $(shell find src/ -type f -iname *.c)
-ALLCSOBJ	:= $(patsubst %.c,%.o,$(ALLCS))
-
+#ALLCSOBJ	:= $(patsubst %.c,%.o,$(ALLCS))
 SUBDIRS := $(shell find $(SRC) -type d)
 OBJSUBDIRS := $(patsubst $(SRC)%,$(OBJ)%,$(SUBDIRS))
-
+ALLOBJ :=       $(foreach F,$(ALLCPPS) $(ALLCS),$(call C2O,$(F)))
 
 .PHONY: dir
-$(APP) : $(OBJSUBDIRS) $(ALLCSOBJ) $(ALLCPPSOBJ)
-#old
-#	$(CC) $(SRC)/main.cpp -c -o $(OBJ)/main.o $(CCFLAGS)
-	$(CC) -o $(APP) $(patsubst $(SRC)%,$(OBJ)%,$(ALLCPPSOBJ) $(ALLCSOBJ)) $(LIBS)
+#$(APP) : $(OBJSUBDIRS) $(ALLCSOBJ) $(ALLCPPSOBJ)
+#	$(CC) -o $(APP) $(patsubst $(SRC)%,$(OBJ)%,$(ALLCPPSOBJ) $(ALLCSOBJ)) $(LIBS)
+$(APP) : $(OBJSUBDIRS) $(ALLOBJ)
+	$(CC) -o $(APP) $(ALLOBJ) $(LIBS)
 
+#Generate rules for all objects
+$(foreach F,$(ALLCPPS),$(eval $(call COMPILE,$(CC),$(call C2O,$(F)),$(F),$(call C2H$(F)),$(CCFLAGS))))
+$(foreach F,$(ALLCS),$(eval $(call COMPILE,$(C),$(call C2O,$(F)),$(F),$(call C2H$(F)),$(CFLAGS))))
 
+#%.o : %.c
+#	$(C) -o $(patsubst $(SRC)%,$(OBJ)%,$@) -c $^ $(CFLAGS)
 
-%.o : %.c
-#	$(C) -o $@ -c $^ $(CCFLAGS)
-	$(C) -o $(patsubst $(SRC)%,$(OBJ)%,$@) -c $^ $(CFLAGS)
-
-%.o : %.cpp
-#	$(C) -o $@ -c $^ $(CCFLAGS)
-	$(CC) -o $(patsubst $(SRC)%,$(OBJ)%,$@) -c $^ $(CCFLAGS)
+#%.o : %.cpp
+#	$(CC) -o $(patsubst $(SRC)%,$(OBJ)%,$@) -c $^ $(CCFLAGS)
 
 dir:
 	$(info $(SUBDIRS))
