@@ -1,6 +1,6 @@
 # Retroman
 
-Retro arcade game engine in C++ using tinyPTC over X11 on Linux.
+Retro arcade game engine in C++17 using tinyPTC over X11 on Linux.
 
 ## Requirements
 
@@ -35,7 +35,8 @@ make cleanall     # remove objects and binary
 ├── lib/tinyPTC/              # Precompiled static library (libtinyptc.a)
 ├── docs/RULES.md             # Versioning rules
 ├── VERSION                   # Current version
-└── Makefile                  # Build system
+├── Makefile                  # Build system
+└── .mimocode/skills/retroman/ # Project skill for MiMoCode
 ```
 
 ## Architecture
@@ -46,7 +47,7 @@ make cleanall     # remove objects and binary
 
 ## Versioning
 
-Version is defined in `VERSION` and mirrored as Git tags with `v` prefix (e.g. `v2.2.0`). See `docs/RULES.md`.
+Version is defined in `VERSION` and mirrored as Git tags with `v` prefix (e.g. `v2.3.0`). See `docs/RULES.md`.
 
 ## License
 
