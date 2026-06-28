@@ -26,9 +26,10 @@ int main(void)
         ECS::EntityManager_t entityMan;
 
         // Spawn test entities with PNG sprites
-        entityMan.createEntity(20,  40, "png/ninja.png");
-        entityMan.createEntity(80,  10, "png/ninja.png");
-        entityMan.createEntity(200, 70, "png/ninja.png");
+        // Spawn test entities with different sprites
+        entityMan.createEntity(20,  40,  "assets/bell.png");
+        entityMan.createEntity(120, 50,  "assets/bottle.png");
+        entityMan.createEntity(260, 60,  "assets/runner.png");
 
         // Create ECS systems
         const ECS::RenderSystem_t   render   { kSCRWIDTH, kSCRHEIGHT };
