@@ -32,13 +32,12 @@ C			:= gcc
 MKDIR       := mkdir -p
 SRC         := src
 OBJ         := obj
-LIBS		:= -lX11 -lXext
 LIBDIR := lib
-LIBS	+= $(LIBDIR)/tinyPTC/libtinyptc.a
+LIBS	:= $(LIBDIR)/tinyPTC/libtinyptc.a
 #LIBS += $(LIBDIR)/picoPNG/libpicopng.a
-
+LIBS += -Wall -pedantic
 INCDIRS := -I$(SRC) -I$(LIBDIR)
-
+LIBS		+= -lX11 -lXext
 
 
 #para el uso commando es make DEBUG=1
@@ -57,7 +56,7 @@ SUBDIRS 	:= $(shell find $(SRC) -type d)
 OBJSUBDIRS 	:= $(patsubst $(SRC)%,$(OBJ)%,$(SUBDIRS))
 ALLOBJ 		:= $(foreach F,$(ALLCPPS) $(ALLCS),$(call C2O,$(F)))
 
-.PHONY: dir
+.PHONY: info libs libs-clean libs-cleanall
 #Generate APP
 $(APP) : $(OBJSUBDIRS) $(ALLOBJ)
 	$(CC) -o $(APP) $(ALLOBJ) $(LIBS)
@@ -72,7 +71,7 @@ $(foreach F,$(ALLCS),$(eval $(call COMPILE,$(C),$(call C2O,$(F)),$(F),$(call C2H
 #%.o : %.cpp
 #	$(CC) -o $(patsubst $(SRC)%,$(OBJ)%,$@) -c $^ $(CCFLAGS)
 
-dir:
+info:
 	$(info $(SUBDIRS))
 	$(info $(OBJSUBDIRS))
 	
@@ -89,4 +88,9 @@ clean:
 
 cleanall: clean
 	$(RM) "./$(APP)"
-	
+libs:
+	$(MAKE)	-C $(LIBDIR)
+libs-clean:
+	$(MAKE) -C $(LIBDIR) clean
+libs-cleanall:
+	$(MAKE) -C $(LIBDIR) cleanall
