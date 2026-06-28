@@ -1,32 +1,41 @@
 #pragma once
-#include <vector>
 
+#include <vector>
 
 namespace ECS {
 
 struct PhysicsComponent_t;
 
-    struct ComponentStorage_t
+/// Manages separate component storage for ECS.
+/// Provides RAII for component vectors and enforces non-copyable semantics.
+struct ComponentStorage_t
+{
+    /// Default constructor
+    explicit ComponentStorage_t() = default;
+
+    // Non-copyable
+    ComponentStorage_t(const ComponentStorage_t&) = delete;
+    ComponentStorage_t(ComponentStorage_t&&) = delete;
+    ComponentStorage_t operator&(const ComponentStorage_t&) = delete;
+    ComponentStorage_t operator&&(ComponentStorage_t&&) = delete;
+
+    /// Create a new physics component and return a reference to it.
+    PhysicsComponent_t& createPhysicsComponent();
+
+    /// Mutable access to the physics component vector.
+    std::vector<PhysicsComponent_t>& getPhysicsComponent()
     {
-    private:
-    std::vector<PhysicsComponent_t> m_physicsComponents{};
-    public:
-        
-        explicit ComponentStorage_t()=default;
-        ComponentStorage_t(const ComponentStorage_t&) = delete;
-        ComponentStorage_t(ComponentStorage_t&&) = delete;
-        ComponentStorage_t operator&(const ComponentStorage_t&) = delete;
-        ComponentStorage_t operator&&( ComponentStorage_t&&) = delete;
-        PhysicsComponent_t& createPhysicsComponent();
-       //RenderComponent_t& createRenderComponent();
+        return m_physicsComponent;
+    }
 
+    /// Read-only access to the physics component vector.
+    const std::vector<PhysicsComponent_t>& getPhysicsComponent() const
+    {
+        return m_physicsComponent;
+    }
 
-        std::vector<PhysicsComponent_t>& getPhysicsComponent(){return m_physicsComponent;};
-        const std::vector<PhysicsComponent_t>& getPhysicsComponent() const { return m_physicsComponent;};
+private:
+    std::vector<PhysicsComponent_t> m_physicsComponent;  ///< Physics component pool
+};
 
-    private:
-        std::vector<PhysicsComponent_t> m_physicsComponent;
-
-    };
-
-}
+} // namespace ECS

@@ -1,46 +1,60 @@
 #pragma once
+
 #include <cstdint>
 #include <memory>
-//#include "../util/gamecontext.hpp"
+
 #include "../util/typealiases.hpp"
 #include "../cmp/entity.hpp"
 
+namespace ECS {
 
-namespace ECS{
+// Forward declarations
+struct EntityManager_t;
+struct GameContext_t;
 
-	//foward declaration
-	struct EntityManager_t;
-	//struct Entity_t;
-	struct GameContext_t;
+/// Rendering system.
+/// Owns the framebuffer and draws entity sprites to the screen
+/// via tinyPTC over X11.
+struct RenderSystem_t
+{
+    /// Construct and open a tinyPTC window.
+    /// @param w  Window/framebuffer width
+    /// @param h  Window/framebuffer height
+    explicit RenderSystem_t(uint32_t w, uint32_t h);
 
-	struct RenderSystem_t
-	{
-		explicit RenderSystem_t(uint32_t,uint32_t);
-		//explicit RenderSystem_t(uint32_t,uint32_t,EntityManager_t&);
-		~RenderSystem_t();
-		bool update(const GameContext_t&) const;
-		void drawAllEntities(const Vect_t<Entity_t>&)const;
-		//void drawEntity(const Entity_t&);
-		//const
-		static constexpr uint32_t kR = 0x00FF0000;
-		static constexpr uint32_t kG = 0x0000FF00;
-		static constexpr uint32_t kB = 0x000000FF;
-		static constexpr uint32_t msprite[8*8]={
-			kG,kR,kB,kG,kR,kB,kG,
-			kG,kR,kB,kG,kR,kB,kG,
-			kG,kR,kB,kG,kR,kB,kG,
-			kG,kR,kB,kG,kR,kB,kG,
-			kG,kR,kB,kG,kR,kB,kG,
-			kG,kR,kB,kG,kR,kB,kG,
-			kG,kR,kB,kG,kR,kB,kG,
-			kG,kR,kB,kG,kR,kB,kG,
-		};
+    /// Destructor – closes the tinyPTC window.
+    ~RenderSystem_t();
 
-        private:
-			const uint32_t m_w { 0 } , m_h { 0 };       
-			std::unique_ptr<uint32_t[]> m_framebuffer{ nullptr };
-			//EntityManager_t& m_EntMan;
-			
-		
-	};
-}//end namespace ECS
+    /// Per-frame update: clear → draw → present → poll events.
+    /// @param g  Game context providing entity data
+    /// @return   true while the window is open, false on quit
+    bool update(const GameContext_t& g) const;
+
+    /// Draw all entities to the framebuffer.
+    /// @param entities  Entity vector to render
+    void drawAllEntities(const Vect_t<Entity_t>& entities) const;
+
+    // Colour channel masks
+    static constexpr uint32_t kR = 0x00FF0000;
+    static constexpr uint32_t kG = 0x0000FF00;
+    static constexpr uint32_t kB = 0x000000FF;
+
+    /// Static 8×8 test sprite pattern
+    static constexpr uint32_t msprite[8 * 8] = {
+        kG, kR, kB, kG, kR, kB, kG,
+        kG, kR, kB, kG, kR, kB, kG,
+        kG, kR, kB, kG, kR, kB, kG,
+        kG, kR, kB, kG, kR, kB, kG,
+        kG, kR, kB, kG, kR, kB, kG,
+        kG, kR, kB, kG, kR, kB, kG,
+        kG, kR, kB, kG, kR, kB, kG,
+        kG, kR, kB, kG, kR, kB, kG,
+    };
+
+private:
+    const uint32_t m_w{0};                             ///< Framebuffer width
+    const uint32_t m_h{0};                             ///< Framebuffer height
+    std::unique_ptr<uint32_t[]> m_framebuffer{nullptr}; ///< Pixel buffer
+};
+
+} // namespace ECS
