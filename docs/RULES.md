@@ -1,3 +1,9 @@
+**Regla fundamental: `tag = v` + `VERSION`**
+
+Cada tag anotado debe llamarse `v` seguido del contenido exacto del archivo `VERSION` en el commit al que apunta.
+
+---
+
 ## Sincronización entre VERSION y tags de Git
 
 **Propósito:** Garantizar que cada release esté correctamente etiquetado y que la versión del código coincida exactamente con la etiqueta del tag.
