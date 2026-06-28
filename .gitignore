@@ -8,6 +8,7 @@ obj/
 *.exe
 *.out
 *.app
+app
 
 # IDE
 .vscode/
@@ -23,3 +24,4 @@ Thumbs.db
 # Build directories
 build/
 bin/
+lib/

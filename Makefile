@@ -1,3 +1,4 @@
+#######################################APPLICATION##################################################
 ################################################################################################
 ########################################MACROS##################################################
 ################################################################################################
@@ -24,14 +25,21 @@ endef
 ################################################################################################
 ################################################################################################v
 APP         := app
-CCFLAGS     := -Wall -pedantic
-CFLAGS     	:= $(CCFLAGS)
+CFLAGS     := -Wall -pedantic
+CCFLAGS     	:= $(CCFLAGS) -std=c++17
 CC          := g++
 C			:= gcc
 MKDIR       := mkdir -p
 SRC         := src
 OBJ         := obj
 LIBS		:= -lX11 -lXext
+LIBDIR := lib
+LIBS	+= $(LIBDIR)/tinyPTC/libtinyptc.a
+#LIBS += $(LIBDIR)/picoPNG/libpicopng.a
+
+INCDIRS := -I$(SRC) -I$(LIBDIR)
+
+
 
 #para el uso commando es make DEBUG=1
 ifdef DEBUG 
@@ -42,22 +50,21 @@ endif
 
 
 ALLCPPS 	:= $(shell find src/ -type f -iname *.cpp)
-#ALLOCPPSOBJ  := $(patsubst %.cpp,%.o,$(ALLCPPS))
+#ALLOCPPSOBJ  	:= $(patsubst %.cpp,%.o,$(ALLCPPS))
 ALLCS		:= $(shell find src/ -type f -iname *.c)
 #ALLCSOBJ	:= $(patsubst %.c,%.o,$(ALLCS))
-SUBDIRS := $(shell find $(SRC) -type d)
-OBJSUBDIRS := $(patsubst $(SRC)%,$(OBJ)%,$(SUBDIRS))
-ALLOBJ :=       $(foreach F,$(ALLCPPS) $(ALLCS),$(call C2O,$(F)))
+SUBDIRS 	:= $(shell find $(SRC) -type d)
+OBJSUBDIRS 	:= $(patsubst $(SRC)%,$(OBJ)%,$(SUBDIRS))
+ALLOBJ 		:= $(foreach F,$(ALLCPPS) $(ALLCS),$(call C2O,$(F)))
 
 .PHONY: dir
-#$(APP) : $(OBJSUBDIRS) $(ALLCSOBJ) $(ALLCPPSOBJ)
-#	$(CC) -o $(APP) $(patsubst $(SRC)%,$(OBJ)%,$(ALLCPPSOBJ) $(ALLCSOBJ)) $(LIBS)
+#Generate APP
 $(APP) : $(OBJSUBDIRS) $(ALLOBJ)
 	$(CC) -o $(APP) $(ALLOBJ) $(LIBS)
 
 #Generate rules for all objects
-$(foreach F,$(ALLCPPS),$(eval $(call COMPILE,$(CC),$(call C2O,$(F)),$(F),$(call C2H$(F)),$(CCFLAGS))))
-$(foreach F,$(ALLCS),$(eval $(call COMPILE,$(C),$(call C2O,$(F)),$(F),$(call C2H$(F)),$(CFLAGS))))
+$(foreach F,$(ALLCPPS),$(eval $(call COMPILE,$(CC),$(call C2O,$(F)),$(F),$(call C2H$(F)),$(CCFLAGS) $(INCDIRS))))
+$(foreach F,$(ALLCS),$(eval $(call COMPILE,$(C),$(call C2O,$(F)),$(F),$(call C2H$(F)),$(CFLAGS) $(INCDIRS))))
 
 #%.o : %.c
 #	$(C) -o $(patsubst $(SRC)%,$(OBJ)%,$@) -c $^ $(CFLAGS)
