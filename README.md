@@ -45,9 +45,17 @@ make cleanall     # remove objects and binary
 - **ECS::EntityManager_t** — Entity lifecycle, creation, and sprite/color management
 - **ECS::Entity_t** — Individual entity with position (x,y), dimensions (w,h), and pixel sprite
 
+## Include Convention
+
+Relative quoted includes, not angle-bracket system-style:
+```cpp
+#include "sys/render.hpp"
+#include "../man/entitymanager.hpp"
+```
+
 ## Versioning
 
-Version is defined in `VERSION` and mirrored as Git tags with `v` prefix (e.g. `v2.3.0`). See `docs/RULES.md`.
+Version is defined in `VERSION` and mirrored as Git tags with `v` prefix (e.g. `v2.4.0`). See `docs/RULES.md`.
 
 ## License
 

@@ -29,7 +29,7 @@ make cleanall     # remove objects and binary
 The file `VERSION` must match the git tag exactly (tag has `v` prefix, VERSION does not).
 
 **Release workflow:**
-1. Edit `VERSION` (e.g. `2.3.0`)
+1. Edit `VERSION` (e.g. `2.4.0`)
 2. Commit: `git add VERSION && git commit -m "release: bump version to X.Y.Z"`
 3. Tag: `git tag -a vX.Y.Z -m "Release vX.Y.Z"`
 4. Push: `git push origin main --follow-tags`
@@ -39,6 +39,24 @@ The file `VERSION` must match the git tag exactly (tag has `v` prefix, VERSION d
 git tag -l | sort -V | tail -1  # latest tag
 cat VERSION                       # should match without 'v'
 ```
+
+## Include Path Convention
+
+This project uses **relative paths** for includes:
+
+```cpp
+// From src/main.cpp
+#include "sys/render.hpp"
+#include "../man/entitymanager.hpp"
+#include "../lib/tinyPTC/src/tinyptc.h"
+
+// From src/sys/render.cpp
+#include "../sys/render.hpp"
+#include "../../man/entitymanager.hpp"
+#include "../../lib/tinyPTC/src/tinyptc.h"
+```
+
+Do NOT use angle-bracket system-style includes (`<sys/render.hpp>`) — use relative quoted includes.
 
 ## Architecture
 
@@ -66,4 +84,4 @@ cat VERSION                       # should match without 'v'
 
 - `app` binary excluded
 - `obj/`, `build/`, `bin/`, `lib/` excluded
-- CMake artifacts excluded (unrelated CMakeLists.txt in src/)
+- All `CMakeLists.txt` excluded (unrelated WIP from other projects)

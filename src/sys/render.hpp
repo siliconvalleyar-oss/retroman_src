@@ -1,6 +1,8 @@
 #pragma once
+#include <iostream>
 #include <cstdint>
 #include <memory>
+
 
 namespace ECS{
 	//foward declaration
@@ -29,7 +31,7 @@ namespace ECS{
 		};
 
         private:
-        	const int32_t m_w { 0 } , m_h { 0 };       
+			const int32_t m_w { 0 } , m_h { 0 };       
 			std::unique_ptr<uint32_t[]> m_framebuffer{ nullptr };
 			EntityManager_t& m_EntMan;
 	};

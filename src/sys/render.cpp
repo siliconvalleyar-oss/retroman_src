@@ -1,9 +1,9 @@
 extern "C"{
-	#include <tinyPTC/src/tinyptc.h>
+	#include "../../lib/tinyPTC/src/tinyptc.h"
 }
-#include <iostream>
-#include <sys/render.hpp>
-#include <../man/entitymanager.hpp>
+
+#include "../sys/render.hpp"
+#include "../../man/entitymanager.hpp"
 
 namespace ECS{
 

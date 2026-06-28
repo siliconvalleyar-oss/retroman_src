@@ -1,11 +1,12 @@
 extern "C" {
-    #include <tinyPTC/src/tinyptc.h>
+///    #include <tinyPTC/src/tinyptc.h>
+#include "../lib/tinyPTC/src/tinyptc.h"
 }
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <sys/render.hpp>
-#include <../man/entitymanager.hpp>
+#include "sys/render.hpp"
+#include "../man/entitymanager.hpp"
 
 constexpr uint32_t kSCRWIDTH { 480 };
 constexpr uint32_t kSCRHEIGHT { 272 };
