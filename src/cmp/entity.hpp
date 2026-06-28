@@ -11,8 +11,6 @@
 namespace ECS{
 	struct Entity_t
 	{
-		std::vector<uint32_t>sprite{};
-		
 		~Entity_t()=default;
 		
 		explicit Entity_t(uint32_t _w , uint32_t _h)
@@ -41,7 +39,12 @@ namespace ECS{
 
 		}
 
+		bool has_physics(){return true;};
+
 		uint32_t x { 0 } , y { 0 };	
 		uint32_t w { 0 } , h { 0 };
+		uint32_t vx { 1 } , vy { 1 };
+
+		std::vector<uint32_t>sprite{};
 	};
 }
