@@ -47,12 +47,14 @@ This project uses **relative paths** for includes:
 ```cpp
 // From src/main.cpp
 #include "sys/render.hpp"
-#include "../man/entitymanager.hpp"
+#include "man/entitymanager.hpp"
+#include "man/entity.hpp"
 #include "../lib/tinyPTC/src/tinyptc.h"
 
 // From src/sys/render.cpp
 #include "../sys/render.hpp"
-#include "../../man/entitymanager.hpp"
+#include "../man/entitymanager.hpp"
+#include "../man/entity.hpp"
 #include "../../lib/tinyPTC/src/tinyptc.h"
 ```
 
@@ -63,8 +65,8 @@ Do NOT use angle-bracket system-style includes (`<sys/render.hpp>`) — use rela
 | Component | File | Description |
 |-----------|------|-------------|
 | `ECS::RenderSystem_t` | `src/sys/render.hpp` | tinyPTC window, framebuffer, entity drawing |
-| `ECS::EntityManager_t` | `man/entitymanager.hpp` | Entity lifecycle, creation, sprite/color |
-| `ECS::Entity_t` | `man/entitymanager.hpp` | Position (x,y), dimensions (w,h), pixel sprite |
+| `ECS::EntityManager_t` | `src/man/entitymanager.hpp` | Entity lifecycle, creation, sprite/color |
+| `ECS::Entity_t` | `src/man/entity.hpp` | Position (x,y), dimensions (w,h), pixel sprite |
 
 ## Key Files
 

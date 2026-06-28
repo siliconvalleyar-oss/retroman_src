@@ -28,10 +28,12 @@ make cleanall     # remove objects and binary
 │   ├── sys/
 │   │   ├── render.hpp        # RenderSystem (ECS)
 │   │   └── render.cpp
+│   ├── man/
+│   │   ├── entitymanager.hpp # EntityManager (ECS)
+│   │   ├── entitymanager.cpp
+│   │   ├── entity.hpp        # Entity_t component (ECS)
+│   │   └── entity.cpp
 │   └── tinyPTC/              # tinyPTC display backends (source)
-├── man/
-│   ├── entitymanager.hpp     # EntityManager + Entity (ECS)
-│   └── entitymanager.cpp
 ├── lib/tinyPTC/              # Precompiled static library (libtinyptc.a)
 ├── docs/RULES.md             # Versioning rules
 ├── VERSION                   # Current version
@@ -43,14 +45,15 @@ make cleanall     # remove objects and binary
 
 - **ECS::RenderSystem_t** — Manages tinyPTC window, framebuffer rendering, and entity drawing
 - **ECS::EntityManager_t** — Entity lifecycle, creation, and sprite/color management
-- **ECS::Entity_t** — Individual entity with position (x,y), dimensions (w,h), and pixel sprite
+- **ECS::Entity_t** — Individual entity component with position (x,y), dimensions (w,h), and pixel sprite
 
 ## Include Convention
 
 Relative quoted includes, not angle-bracket system-style:
 ```cpp
 #include "sys/render.hpp"
-#include "../man/entitymanager.hpp"
+#include "man/entitymanager.hpp"
+#include "man/entity.hpp"
 ```
 
 ## Versioning

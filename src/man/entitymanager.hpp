@@ -4,25 +4,26 @@
 #include <cstdint>
 #include <memory>
 #include <vector>
+#include "entity.hpp"
 
 namespace ECS{
+	//foward declaration
+//	struct Entity_t;
 
+	// struct Entity_t
+	// {
+	// 	std::vector<uint32_t>sprite{};
 
-	struct Entity_t
-	{
-		explicit Entity_t(u_int32_t _w , u_int32_t _h)
-		: w(_w) , h(_h)
-		{
-			sprite.resize(w*h);	
-		}
+	// 	explicit Entity_t(u_int32_t _w , u_int32_t _h)
+	// 	: w(_w) , h(_h)
+	// 	{
+	// 		//sprite.resize(w*h); 
+	// 		sprite.resize(w*h);	
+	// 	}
 
-
-		std::vector<uint32_t> sprite{};	
-
-		//private:
-		uint32_t x { 0 } , y { 0 };	
-		uint32_t w { 0 } , h { 0 };
-	};
+	// 	uint32_t x { 0 } , y { 0 };	
+	// 	uint32_t w { 0 } , h { 0 };
+	// };
 
 
 	struct  EntityManager_t 
@@ -36,9 +37,9 @@ namespace ECS{
 		{
 			return m_Entity;
 		}
+
 	private:
-		VecEntities_t m_Entity {};
-		
+		VecEntities_t m_Entity{};
 	};
 
 }

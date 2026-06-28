@@ -15,12 +15,12 @@ namespace ECS{
 		~RenderSystem_t();
 		bool update() const;
 		void drawAllEntities()const;
-		void drawEnitity(const Entity_t&);
+		void drawEntity(const Entity_t&);
 
 		static constexpr uint32_t kR = 0x00FF0000;
 		static constexpr uint32_t kG = 0x0000FF00;
 		static constexpr uint32_t kB = 0x000000FF;
-		static constexpr uint32_t sprite[8*8]={
+		static constexpr uint32_t msprite[8*8]={
 			kG,kR,kB,kG,kR,kB,kG,
 			kG,kR,kB,kG,kR,kB,kG,
 			kG,kR,kB,kG,kR,kB,kG,
