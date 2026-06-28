@@ -24,35 +24,33 @@ make cleanall     # remove objects and binary
 ```
 ├── src/
 │   ├── main.cpp              # Entry point
-│   ├── main.hpp              # Application header
+│   ├── main.hpp              # (reserved)
 │   ├── cmp/
 │   │   ├── entity.hpp        # Entity_t component
 │   │   └── entity.cpp
 │   ├── sys/
-│   │   ├── rendersystem.hpp  # RenderSystem (ECS)
-│   │   └── rendersystem.cpp
+│   │   ├── rendersystem.hpp  # RenderSystem_t (rendering)
+│   │   ├── rendersystem.cpp
+│   │   ├── physics.hpp       # PhysicsSystem_t (movement)
+│   │   ├── physics.cpp
+│   │   ├── collision.hpp     # CollisionSystem_t (bounds)
+│   │   └── collision.cpp
 │   ├── man/
-│   │   ├── entitymanager.hpp # EntityManager (ECS)
-│   │   ├── entitymanager.cpp
-│   │   ├── entity.hpp        # (legacy)
-│   │   └── entity.cpp        # (legacy)
+│   │   ├── entitymanager.hpp # EntityManager_t (entity pool)
+│   │   └── entitymanager.cpp
 │   └── util/
 │       ├── gamecontext.hpp   # GameContext_t abstract base
 │       └── typealiases.hpp   # VecEntities_t alias
-│   ├── man/
-│   │   ├── entitymanager.hpp # EntityManager (ECS)
-│   │   ├── entitymanager.cpp
-│   │   ├── entity.hpp        # Entity_t component (ECS)
-│   │   └── entity.cpp
-│   └── tinyPTC/              # tinyPTC display backends (source)
-├── lib/tinyPTC/              # Precompiled static library (libtinyptc.a)
+├── lib/
+│   ├── tinyPTC/              # Precompiled static library
+│   └── picoPNG/              # PNG decoding library
 ├── docs/
 │   ├── RULES.md              # Versioning rules
-│   ├── ARCHITECTURE.md       # Full architecture documentation
-│   └── API.md                # Complete API reference
+│   ├── ARCHITECTURE.md       # Architecture documentation
+│   └── API.md                # API reference
 ├── VERSION                   # Current version
 ├── Makefile                  # Build system
-└── .mimocode/skills/retroman/ # Project skill for MiMoCode
+└── .mimocode/skills/retroman/ # Project skill
 ```
 
 ## Documentation
@@ -69,7 +67,7 @@ Relative quoted includes, not angle-bracket system-style. See [`docs/ARCHITECTUR
 
 ## Versioning
 
-Version is defined in `VERSION` and mirrored as Git tags with `v` prefix (e.g. `v2.4.0`). See [`docs/RULES.md`](docs/RULES.md).
+Version is defined in `VERSION` and mirrored as Git tags with `v` prefix (e.g. `v2.5.2`). See [`docs/RULES.md`](docs/RULES.md).
 
 ## License
 
