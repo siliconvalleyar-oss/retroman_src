@@ -1,3 +1,6 @@
+/// @file physics.cpp
+/// @brief Translation unit for PhysicsSystem_t.
+
 #include "physics.hpp"
 #include "../util/gamecontext.hpp"
 
