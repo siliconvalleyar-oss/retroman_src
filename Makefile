@@ -1,6 +1,7 @@
 #gcc -o icon icon.c -L/usr/X11/lib -lX11 -lstdc++
 #find /src -type f iname *.cpp
 #find /src -type f name *.cpp
+#ls /usr/lib | grep X11
 
 APP         := app
 CCFLAGS     := -Wall -pedantic
@@ -10,6 +11,8 @@ C			:= gcc
 MKDIR       := mkdir -p
 SRC         := src
 OBJ         := obj
+LIBS		:= -lX11 -lXext
+
 ALLCPP 		:= $(shell find src/ -type f -iname *.cpp)
 ALLCPPS 	:= $(shell find src/ -type f -iname *.cpp)
 ALLCPPSOBJ	:= $(patsubst %.cpp,%.o,$(ALLCPPS))
@@ -26,7 +29,7 @@ OBJSUBDIRS := $(patsubst $(SRC)%,$(OBJ)%,$(SUBDIRS))
 $(APP) : $(OBJSUBDIRS) $(ALLCSOBJ) $(ALLCPPSOBJ)
 #old
 #	$(CC) $(SRC)/main.cpp -c -o $(OBJ)/main.o $(CCFLAGS)
-	$(CC) -o $(APP) $(patsubst $(SRC)%,$(OBJ)%,$(ALLCPPSOBJ) $(ALLCSOBJ))
+	$(CC) -o $(APP) $(patsubst $(SRC)%,$(OBJ)%,$(ALLCPPSOBJ) $(ALLCSOBJ)) $(LIBS)
 
 
 
