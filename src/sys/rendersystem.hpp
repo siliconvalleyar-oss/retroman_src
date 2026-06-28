@@ -1,15 +1,16 @@
 #pragma once
 #include <cstdint>
 #include <memory>
-#include "../util/gamecontext.hpp"
+//#include "../util/gamecontext.hpp"
 #include "../util/typealiases.hpp"
+#include "../cmp/entity.hpp"
 
 
 namespace ECS{
 
 	//foward declaration
 	struct EntityManager_t;
-	struct Entity_t;
+	//struct Entity_t;
 	struct GameContext_t;
 
 	struct RenderSystem_t
@@ -18,7 +19,7 @@ namespace ECS{
 		//explicit RenderSystem_t(uint32_t,uint32_t,EntityManager_t&);
 		~RenderSystem_t();
 		bool update(const GameContext_t&) const;
-		void drawAllEntities(const VecEntities_t&)const;
+		void drawAllEntities(const Vect_t<Entity_t>&)const;
 		//void drawEntity(const Entity_t&);
 		//const
 		static constexpr uint32_t kR = 0x00FF0000;

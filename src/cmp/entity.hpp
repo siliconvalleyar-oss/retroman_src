@@ -7,8 +7,17 @@
 #include "../../lib/picoPNG/src/picopng.hpp"
 #include <iostream>
 #include <cstring>
+//#include "../man/physics.hpp"
+#include "physics.hpp"
+#include "../util/typealiases.hpp"
+
 
 namespace ECS{
+
+
+//using VecEntities_t = Vect_t <Entity_t>;
+
+
 	struct Entity_t
 	{
 		~Entity_t()=default;
@@ -32,19 +41,30 @@ namespace ECS{
 
 
 			decodePNG(pixels ,dw,dh,filevec.data() , filevec.size());
-				sprite.resize(pixels.size()/4);
-				std::memcpy(sprite.data() , pixels.data() , pixels.size());
-				w=dw;
-				h=dh;
+			sprite.reserve(pixels.size()/4);
+			//std::memcpy(sprite.data() , pixels.data() , pixels.size());
+			w=dw;
+			h=dh;
+			for (auto p =pixels.begin() ; p != pixels.end() ; p +=4){
+				uint32_t pixel = 
+				static_cast <uint32_t>(*(p+0))<<16
+			|	static_cast <uint32_t>(*(p+1))<<8
+			|	static_cast <uint32_t>(*(p+2))
+			|	static_cast <uint32_t>(*(p+3))<<24;
+				
+				sprite.push_back(pixel);
+			}
 
 		}
 
-		bool has_physics(){return true;};
 
-		uint32_t x { 0 } , y { 0 };	
+		uint32_t x { 0 } , y { 0 };	//fala comentar
+		uint32_t vx { 1 } , vy { 1 };//falta comentar
+		PhysicsComponent_t* phy { nullptr };
 		uint32_t w { 0 } , h { 0 };
-		uint32_t vx { 1 } , vy { 1 };
-
+		
 		std::vector<uint32_t>sprite{};
+	
+		EntityID_t entityID;
 	};
 }
