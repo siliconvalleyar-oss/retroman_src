@@ -23,7 +23,7 @@ $(patsubst %.c,%.h,$(patsubst %.cpp,%.hpp,$(1)))
 endef
 ################################################################################################
 ################################################################################################
-################################################################################################v
+################################################################################################
 APP         := app
 CFLAGS     := -Wall -pedantic
 CCFLAGS     	:= $(CCFLAGS) -std=c++17 -g
@@ -62,8 +62,8 @@ $(APP) : $(OBJSUBDIRS) $(ALLOBJ)
 	$(CC) -o $(APP) $(ALLOBJ) $(LIBS)
 
 #Generate rules for all objects
-$(foreach F,$(ALLCPPS),$(eval $(call COMPILE,$(CC),$(call C2O,$(F)),$(F),$(call C2H$(F)),$(CCFLAGS) $(INCDIRS))))
-$(foreach F,$(ALLCS),$(eval $(call COMPILE,$(C),$(call C2O,$(F)),$(F),$(call C2H$(F)),$(CFLAGS) $(INCDIRS))))
+$(foreach F,$(ALLCPPS),$(eval $(call COMPILE,$(CC),$(call C2O,$(F)),$(F),$(call C2H,$(F)),$(CCFLAGS) $(INCDIRS))))
+$(foreach F,$(ALLCS),$(eval $(call COMPILE,$(C),$(call C2O,$(F)),$(F),$(call C2H,$(F)),$(CFLAGS) $(INCDIRS))))
 
 #%.o : %.c
 #	$(C) -o $(patsubst $(SRC)%,$(OBJ)%,$@) -c $^ $(CFLAGS)
