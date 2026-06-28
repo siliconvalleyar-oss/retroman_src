@@ -26,8 +26,8 @@ make cleanall     # remove objects and binary
 │   ├── main.cpp              # Entry point
 │   ├── main.hpp              # Application header
 │   ├── sys/
-│   │   ├── render.hpp        # RenderSystem (ECS)
-│   │   └── render.cpp
+│   │   ├── rendersystem.hpp  # RenderSystem (ECS)
+│   │   └── rendersystem.cpp
 │   ├── man/
 │   │   ├── entitymanager.hpp # EntityManager (ECS)
 │   │   ├── entitymanager.cpp
