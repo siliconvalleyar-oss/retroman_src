@@ -26,7 +26,7 @@ endef
 ################################################################################################v
 APP         := app
 CFLAGS     := -Wall -pedantic
-CCFLAGS     	:= $(CCFLAGS) -std=c++17
+CCFLAGS     	:= $(CCFLAGS) -std=c++17 -g
 CC          := g++
 C			:= gcc
 MKDIR       := mkdir -p

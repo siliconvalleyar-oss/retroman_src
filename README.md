@@ -1,40 +1,50 @@
 # Retroman
 
-Proyecto de práctica en C++ con gráficos utilizando la librería tinyPTC sobre X11 en Linux.
+Retro arcade game engine in C++ using tinyPTC over X11 on Linux.
 
-## Requisitos
+## Requirements
 
-- Compilador `g++`
-- Librerías de desarrollo de X11 (`libx11-dev`, `libxext-dev`)
-- tinyPTC (incluido como `libtinyptc.a` y código fuente en `src/tinyPTC/`)
+- `g++` with C++17 support
+- X11 development libraries (`libx11-dev`, `libxext-dev`)
+- tinyPTC (static library in `lib/tinyPTC/libtinyptc.a`)
 
-## Compilación
+## Build
 
 ```bash
-make
+make            # release build (O3)
+make DEBUG=1    # debug build (g)
+make clean      # remove objects
+make cleanall   # remove objects and binary
 ```
 
-Esto genera el binario `app` en la raíz del proyecto.
-
-## Estructura
+## Structure
 
 ```
 ├── src/
-│   ├── main.cpp           # Punto de entrada
-│   └── tinyPTC/           # Librería tinyPTC (targets: xdbe, xlib, xshm, xvshm)
-├── obj/                   # Objetos compilados
-├── docs/RULES.md          # Reglas del proyecto
-├── VERSION                # Versión actual
-├── Makefile               # Build system
-└── libtinyptc.a           # Librería precompilada
+│   ├── main.cpp              # Entry point
+│   ├── main.hpp              # Application header
+│   ├── sys/
+│   │   ├── render.hpp        # RenderSystem (ECS)
+│   │   └── render.cpp
+│   └── tinyPTC/              # tinyPTC display backends
+├── man/
+│   ├── entitymanager.hpp     # EntityManager (ECS)
+│   └── entitymanager.cpp
+├── lib/tinyPTC/              # Precompiled static library
+├── docs/RULES.md             # Versioning rules
+├── VERSION                   # Current version
+└── Makefile                  # Build system
 ```
 
-## Versionado
+## Architecture
 
-La versión se define en `VERSION` y se refleja en los tags de Git con prefijo `v` (ej. `v1.0.1`). Ver `docs/RULES.md` para la regla de sincronización.
+- **ECS::RenderSystem_t** - Manages tinyPTC window and framebuffer rendering
+- **ECS::EntityManager_t** - Entity lifecycle and sprite management
 
-## Licencia
+## Versioning
 
-Código de práctica. tinyPTC está licenciado bajo GPLv2 (ver cabeceras en `src/tinyPTC/`).
+Version is defined in `VERSION` and mirrored as Git tags with `v` prefix (e.g. `v2.1.0`). See `docs/RULES.md`.
 
+## License
 
+Practice project. tinyPTC is licensed under GPLv2.

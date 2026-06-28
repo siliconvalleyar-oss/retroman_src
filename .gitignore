@@ -2,13 +2,17 @@
 *.o
 *.obj
 *.a
-obj/
 
 # Compiled output
 *.exe
 *.out
-*.app
 app
+
+# Build directories
+obj/
+build/
+bin/
+lib/
 
 # IDE
 .vscode/
@@ -20,8 +24,3 @@ app
 # OS
 .DS_Store
 Thumbs.db
-
-# Build directories
-build/
-bin/
-lib/
