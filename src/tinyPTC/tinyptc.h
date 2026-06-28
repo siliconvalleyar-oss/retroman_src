@@ -38,10 +38,10 @@ typedef unsigned char char8;
 /* This directive enables pixelformat conversions - ignored for the
  * XVideo+Mit-Shm target */
 
-//#define __PTC_ENABLE_CONVERSIONS__
+#define __PTC_ENABLE_CONVERSIONS__
 
 /* This directive enables mmx-optimized pixelformat conversions */
-//#define __PTC_MMX__ 
+
 /* #define __PTC_MMX__ */
 
 /* This directive enables little-endian pixelformat converters - ignored for
@@ -61,7 +61,7 @@ typedef unsigned char char8;
 
 /* If you uncomment this directive, you'll choose raw xlib video rendering */
 
-//#define __PTC_XLIB__
+#define __PTC_XLIB__
 
 /* If you uncomment this directive, you'll choose X Shared memory extension
  * video rendering */
@@ -76,7 +76,7 @@ typedef unsigned char char8;
 /* If you uncomment this directive, you'll choose X Direct Graphics Access
  * extension (version 1.x) video rendering */
 
- #define __PTC_XDGA1__
+// #define __PTC_XDGA1__
 
 /* If you uncomment this directive, you'll choose X Direct Graphics Access
  * extension (version 2.x) video rendering */
@@ -86,7 +86,7 @@ typedef unsigned char char8;
 /* If you uncomment this directive, you'll choose XVideo YV12 Accelerated
  * extension video rendering (using shared memory) */
 
- //#define __PTC_XVSHM__
+// #define __PTC_XVSHM__
 
 #ifdef __PTC_WINDOWED__
 #error __PTC_WINDOWED__ is not valid anymore, use __PTC_XLIB__ instead.
