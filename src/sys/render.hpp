@@ -11,10 +11,11 @@ namespace ECS{
 
 	struct RenderSystem_t
 	{
-		explicit RenderSystem_t(uint32_t w ,uint32_t h,EntityManager_t& em);
+		explicit RenderSystem_t(uint32_t,uint32_t,EntityManager_t&);
 		~RenderSystem_t();
 		bool update() const;
 		void drawAllEntities()const;
+		void drawEnitity(const Entity_t&);
 
 		static constexpr uint32_t kR = 0x00FF0000;
 		static constexpr uint32_t kG = 0x0000FF00;
@@ -34,5 +35,6 @@ namespace ECS{
 			const int32_t m_w { 0 } , m_h { 0 };       
 			std::unique_ptr<uint32_t[]> m_framebuffer{ nullptr };
 			EntityManager_t& m_EntMan;
+		
 	};
 }//end namespace ECS
