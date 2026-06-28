@@ -5,7 +5,7 @@ extern "C" {
 #include <iostream>
 #include <memory>
 #include <sys/render.hpp>
-#include <man/entitymanager.hpp>
+#include <../man/entitymanager.hpp>
 
 constexpr uint32_t kSCRWIDTH { 480 };
 constexpr uint32_t kSCRHEIGHT { 272 };
@@ -14,10 +14,11 @@ constexpr uint32_t kSCRHEIGHT { 272 };
 int main(void){
   
   try{
-      ECS::EntityManager_t EntityMan;
-      EntityMan.createEntity(20,40,16,16,0x00f1f1f1);
-      const ECS::RenderSystem_t Render{ kSCRWIDTH , kSCRHEIGHT , EntityMan};
-	    while(Render.update());
+      ECS::EntityManager_t entityMan;
+ 
+      entityMan.createEntity(20,40,16,16,0x00f1f1f1);
+      const ECS::RenderSystem_t Render{ kSCRWIDTH , kSCRHEIGHT , entityMan};
+	    //while(Render.update());
   }
   catch(...){
     std::cout<< "break program"<<std::endl;

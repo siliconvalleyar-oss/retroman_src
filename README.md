@@ -11,10 +11,12 @@ Retro arcade game engine in C++ using tinyPTC over X11 on Linux.
 ## Build
 
 ```bash
-make            # release build (O3)
-make DEBUG=1    # debug build (g)
-make clean      # remove objects
-make cleanall   # remove objects and binary
+make              # release build (O3)
+make DEBUG=1      # debug build (g)
+make info         # show source/object paths
+make libs         # build dependencies in lib/
+make clean        # remove objects
+make cleanall     # remove objects and binary
 ```
 
 ## Structure
@@ -26,11 +28,11 @@ make cleanall   # remove objects and binary
 │   ├── sys/
 │   │   ├── render.hpp        # RenderSystem (ECS)
 │   │   └── render.cpp
-│   └── tinyPTC/              # tinyPTC display backends
+│   └── tinyPTC/              # tinyPTC display backends (source)
 ├── man/
-│   ├── entitymanager.hpp     # EntityManager (ECS)
+│   ├── entitymanager.hpp     # EntityManager + Entity (ECS)
 │   └── entitymanager.cpp
-├── lib/tinyPTC/              # Precompiled static library
+├── lib/tinyPTC/              # Precompiled static library (libtinyptc.a)
 ├── docs/RULES.md             # Versioning rules
 ├── VERSION                   # Current version
 └── Makefile                  # Build system
@@ -38,12 +40,13 @@ make cleanall   # remove objects and binary
 
 ## Architecture
 
-- **ECS::RenderSystem_t** - Manages tinyPTC window and framebuffer rendering
-- **ECS::EntityManager_t** - Entity lifecycle and sprite management
+- **ECS::RenderSystem_t** — Manages tinyPTC window, framebuffer rendering, and entity drawing
+- **ECS::EntityManager_t** — Entity lifecycle, creation, and sprite/color management
+- **ECS::Entity_t** — Individual entity with position (x,y), dimensions (w,h), and pixel sprite
 
 ## Versioning
 
-Version is defined in `VERSION` and mirrored as Git tags with `v` prefix (e.g. `v2.1.0`). See `docs/RULES.md`.
+Version is defined in `VERSION` and mirrored as Git tags with `v` prefix (e.g. `v2.2.0`). See `docs/RULES.md`.
 
 ## License
 
