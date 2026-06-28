@@ -1,9 +1,8 @@
 #include "entity.hpp"
-#include <iostream>
 
 namespace ECS {
 
-// Entity_t is fully defined in the header.
-// This file exists for future non-inline method definitions.
+/// Static ID counter for generating unique entity identifiers.
+EntityID_t Entity_t::nextID{0};
 
 } // namespace ECS

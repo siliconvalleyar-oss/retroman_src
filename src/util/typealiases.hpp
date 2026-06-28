@@ -1,14 +1,15 @@
 #pragma once
 
+#include <cstddef>
 #include <vector>
 
 namespace ECS {
 
-/// Generic vector type alias used throughout the ECS.
+/// Generic vector type alias used for entity storage throughout the ECS.
 template <typename T>
 using Vect_t = std::vector<T>;
 
-/// Entity ID type – used to uniquely identify entities.
+/// Unique entity identifier type.
 using EntityID_t = std::size_t;
 
 } // namespace ECS

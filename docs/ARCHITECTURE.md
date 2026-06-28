@@ -5,166 +5,121 @@ Retroman is a retro arcade game engine using an **Entity-Component-System (ECS)*
 ## Overview
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        main.cpp                             │
-│  Creates: EntityManager, RenderSystem, Physics, Collision   │
-│  Game loop:                                                 │
-│    while(render.update(ctx)) {                              │
-│      physics.update(ctx);                                   │
-│      collision.update(ctx);                                 │
-│    }                                                        │
-└──────────┬──────────┬──────────────┬────────────────────────┘
-           │          │              │
-           ▼          ▼              ▼
-┌──────────────┐ ┌──────────┐ ┌──────────────┐
-│    Render    │ │ Physics  │ │  Collision   │
-│   System_t   │ │System_t  │ │ System_t     │
-│  (src/sys/)  │ │(src/sys/)│ │ (src/sys/)   │
-│              │ │          │ │              │
-│  Owns fb     │ │ Updates  │ │ Screen-edge  │
-│  Blits       │ │ entity   │ │ collision    │
-│  sprites     │ │ position │ │ detection    │
-└──────┬───────┘ └──────────┘ └──────────────┘
-       │              │              │
-       └──────────────┴──────────────┘
-                      │
-                      ▼
-        ┌───────────────────────────┐
-        │     GameContext_t          │
-        │  (src/util/gamecontext.)   │
-        │  Abstract base:            │
-        │    getEntities() const     │
-        │    getEntities() mutable   │
-        └──────────┬─────────────────┘
-                   │
-                   ▼
-        ┌───────────────────────────┐
-        │     EntityManager_t        │
-        │  (src/man/)                │
-        │  Inherits GameContext_t    │
-        │  Stores entities in vector │
-        └──────────┬─────────────────┘
-                   │
-                   ▼
-        ┌───────────────────────────┐
-        │     Entity_t (Component)   │
-        │  src/cmp/entity.hpp        │
-        │                            │
-        │  Position (x,y)            │
-        │  Velocity (vx,vy)          │
-        │  Dimensions (w,h)          │
-        │  Pixel sprite (vector)     │
-        │  PNG loader constructor    │
-        └───────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│                       main.cpp                          │
+│  Creates: EntityManager, RenderSystem, Physics, Collision│
+│  Game loop:                                              │
+│    while (render.update(ctx)) {                          │
+│        physics.update(ctx);                              │
+│        collision.update(ctx);                            │
+│    }                                                     │
+└──────────┬──────────┬────────────┬───────────────────────┘
+           │          │            │
+           ▼          ▼            ▼
+┌──────────────┐ ┌──────────┐ ┌──────────┐
+│    Render    │ │  Physics  │ │ Collision │
+│   System_t   │ │ System_t  │ │ System_t  │
+│  (src/sys/)  │ │(src/sys/) │ │(src/sys/) │
+│              │ │          │ │          │
+│  Blits       │ │ Applies  │ │ Boundary  │
+│  sprites to  │ │ velocity  │ │ bounce    │
+│  framebuffer │ │ to pos    │ │ detection │
+└──────┬───────┘ └─────┬────┘ └─────┬────┘
+       │               │            │
+       └───────────────┴────────────┘
+                       │
+                       ▼
+            ┌─────────────────────┐
+            │    GameContext_t     │
+            │ (src/util/)         │
+            │ getEntities()       │
+            │ getPhysicsComponent()│
+            └──────────┬──────────┘
+                       │
+                       ▼
+            ┌─────────────────────┐
+            │   EntityManager_t   │
+            │ (src/man/)          │
+            │ Entity pool +       │
+            │ ComponentStorage_t  │
+            └──────────┬──────────┘
+                       │
+            ┌──────────┴──────────┐
+            ▼                    ▼
+    ┌──────────────┐   ┌────────────────┐
+    │   Entity_t   │   │PhysicsComponent│
+    │ (src/cmp/)   │   │  (src/cmp/)    │
+    │ w,h,sprite   │   │ x,y,vx,vy     │
+    │ x,y,vx,vy    │   └────────────────┘
+    │ phy* ────────┼───►
+    │ entityID     │
+    └──────────────┘
 ```
+
+## Key Design
+
+- **Entity_t** holds visual data (sprite, dimensions) and a pointer to an optional `PhysicsComponent_t`.
+- **PhysicsComponent_t** is stored separately in `ComponentStorage_t` for cache-friendly iteration by `PhysicsSystem_t`.
+- **GameContext_t** is the abstract interface passed to all systems, providing both entity and component access.
+- **EntityManager_t** implements `GameContext_t`, owning both the entity vector and the `ComponentStorage_t`.
 
 ## Namespace: `ECS`
 
-All engine types live in the `ECS` namespace.
-
 ### `Entity_t` (`src/cmp/entity.hpp`)
+Visual component with position, velocity, dimensions, packed pixel sprite, physics pointer, and auto-incrementing entity ID. Two constructors: blank dimensions or PNG file loader.
 
-Data component representing a renderable game entity:
-- `x`, `y` — screen position
-- `vx`, `vy` — velocity in pixels per frame
-- `w`, `h` — sprite dimensions
-- `sprite` — `std::vector<uint32_t>` of RGBA pixel data
-- `has_physics()` — flag for physics processing
-- Two constructors: dimensions-based and PNG file loader
+### `PhysicsComponent_t` (`src/cmp/physics.hpp`)
+Pure data: position and velocity. Stored in a separate vector for efficient system iteration.
 
-### `GameContext_t` (`src/util/gamecontext.hpp`)
-
-Abstract base class providing a common interface for entity storage:
-- `virtual getEntities() const` — read-only access
-- `virtual getEntities()` — mutable access for systems that modify entities
-- `virtual ~GameContext_t()` — polymorphic destructor
+### `ComponentStorage_t` (`src/man/componentstorage.hpp`)
+RAII manager for physics component vectors. Non-copyable.
 
 ### `EntityManager_t` (`src/man/entitymanager.hpp`)
+Implements `GameContext_t`. Owns `Vect_t<Entity_t>` and `ComponentStorage_t`. Creates entities with associated physics components.
 
-Manages the entity pool, inherits `GameContext_t`:
-- Pre-allocates space for `kNUMINITIALENTITIES` (1000)
-- `createEntity(...)` — allocates a new entity
-- `getEntities() override` — returns ref to internal entity vector
+### `GameContext_t` (`src/util/gamecontext.hpp`)
+Abstract base: `getEntities()` and `getPhysicsComponent()` (const and mutable).
 
 ### `RenderSystem_t` (`src/sys/rendersystem.hpp`)
-
-Rendering system:
-- Owns the framebuffer (`unique_ptr<uint32_t[]>`)
-- Receives `GameContext_t&` per frame via `update()`
-- `update(ctx)` — per-frame: clear → draw → present → poll events
-- `drawAllEntities(entities)` — renders all entity sprites using lambdas
+Opens a tinyPTC window, allocates a framebuffer, draws entity sprites at physics position.
 
 ### `PhysicsSystem_t` (`src/sys/physics.hpp`)
-
-Velocity-based movement system:
-- `update(ctx)` — applies velocity to entity position
-- Basic boundary bounce: reverses velocity on screen edge contact
+Updates `PhysicsComponent_t::x,y` by adding `vx,vy` each frame.
 
 ### `CollisionSystem_t` (`src/sys/collision.hpp`)
-
-Screen-edge collision system:
-- `update(ctx)` — detects when entities exceed screen boundaries
-- Corrects position and reverses velocity on collision
+Checks screen boundaries (640x360) and reverses velocity on contact.
 
 ## Render Pipeline (per frame)
 
-1. **Clear** — fill entire framebuffer with background color (`0x00999999`)
-2. **Draw** — for each entity, blit its sprite rows to the correct screen position
-3. **Present** — call `ptc_update()` to push framebuffer to the X11 window
-4. **Poll** — `ptc_process_events()` checks for window close; returns false to exit
-
-## Game Loop
-
-```
-while (render.update(entityMan)) {
-    physics.update(entityMan);   // move entities
-    collision.update(entityMan); // resolve collisions
-}
-```
-
-## Include Convention
-
-All includes use **relative quoted paths**:
-
-| Source file | Include path |
-|-------------|-------------|
-| `src/main.cpp` | `"sys/rendersystem.hpp"`, `"man/entitymanager.hpp"`, `"util/gamecontext.hpp"`, `"sys/collision.hpp"`, `"sys/physics.hpp"` |
-| `src/sys/rendersystem.cpp` | `"rendersystem.hpp"`, `"../man/entitymanager.hpp"` |
-| `src/sys/physics.cpp` | `"physics.hpp"`, `"../util/gamecontext.hpp"` |
-| `src/sys/collision.cpp` | `"collision.hpp"`, `"../util/gamecontext.hpp"` |
-| `src/man/entitymanager.hpp` | `"../util/typealiases.hpp"`, `"../util/gamecontext.hpp"` |
-| `src/man/entitymanager.cpp` | `"entitymanager.hpp"`, `"../cmp/entity.hpp"` |
-| `src/util/gamecontext.hpp` | `"../cmp/entity.hpp"`, `"typealiases.hpp"` |
-| `src/util/typealiases.hpp` | `"../cmp/entity.hpp"` |
+1. **Clear** — fill framebuffer with background colour `0x00999999`
+2. **Draw** — for each entity with a physics component, blit sprite rows at `(phy->x, phy->y)`
+3. **Present** — `ptc_update()` pushes framebuffer to the X11 window
+4. **Poll** — `ptc_process_events()` returns 0 on window close
 
 ## Build System
 
-The `Makefile` uses custom macros (`COMPILE`, `C2O`, `C2H`) for build rules:
-- Recursively finds all `.cpp`/`.c` sources under `src/`
-- Generates object files into `obj/` mirroring the `src/` directory tree
-- Links against `lib/tinyPTC/libtinyptc.a`, `libX11`, `libXext`
+`Makefile` with `COMPILE`/`C2O`/`C2H` macros. Recursively finds all `.cpp`/`.c` under `src/`. Links `libtinyptc.a` and `libpicopng.a` plus `libX11`/`libXext`.
 
 ## Dependency Graph
 
 ```
 main.cpp
-  ├── sys/rendersystem.hpp → rendersystem.cpp
-  │     ├── man/entitymanager.hpp → entitymanager.cpp
+  ├── sys/rendersystem.hpp -> rendersystem.cpp
+  │     ├── man/entitymanager.hpp -> entitymanager.cpp
+  │     │     ├── man/componentstorage.hpp
+  │     │     │     └── cmp/physics.hpp
   │     │     ├── util/typealiases.hpp
-  │     │     │     └── cmp/entity.hpp → entity.cpp
   │     │     └── util/gamecontext.hpp
   │     │           ├── cmp/entity.hpp
+  │     │           │     ├── cmp/physics.hpp
+  │     │           │     └── util/typealiases.hpp
   │     │           └── util/typealiases.hpp
   │     └── lib/tinyPTC/src/tinyptc.h (external)
-  ├── sys/physics.hpp → physics.cpp
-  │     └── util/gamecontext.hpp
-  ├── sys/collision.hpp → collision.cpp
-  │     └── util/gamecontext.hpp
+  ├── sys/physics.hpp -> physics.cpp -> util/gamecontext.hpp
+  ├── sys/collision.hpp -> collision.cpp -> util/gamecontext.hpp
   └── man/entitymanager.hpp
-        ├── util/typealiases.hpp
-        └── util/gamecontext.hpp
 ```
 
 ## Versioning
 
-See [RULES.md](RULES.md). Version is stored in `VERSION` and tagged as `v<VERSION>`.
+See [RULES.md](RULES.md).

@@ -12,21 +12,27 @@ extern "C" {
 #include "man/entitymanager.hpp"
 #include "util/gamecontext.hpp"
 
-/// Screen resolution constants
+/// Screen resolution constants.
 constexpr uint32_t kSCRWIDTH  { 640 };
 constexpr uint32_t kSCRHEIGHT { 360 };
 
 /// Program entry point.
-/// Creates the entity manager, renderer, physics, and collision systems,
-/// then runs the main game loop.
+/// Creates an entity manager, renderer, physics and collision systems,
+/// spawns test entities, then runs the main game loop.
 int main(void)
 {
     try
     {
-        ECS::EntityManager_t  entityMan;
-        entityMan.createEntity(20, 40, 16, 16, 0x00ffffff);
+        ECS::EntityManager_t entityMan;
 
-        const ECS::RenderSystem_t   render { kSCRWIDTH, kSCRHEIGHT };
+        // Spawn test entities with PNG sprites
+        // Spawn test entities (ensure png/ninja.png exists)
+        entityMan.createEntity(20,  40, "png/ninja.png");
+        entityMan.createEntity(80,  10, "png/ninja.png");
+        entityMan.createEntity(200, 70, "png/ninja.png");
+
+        // Create ECS systems
+        const ECS::RenderSystem_t   render   { kSCRWIDTH, kSCRHEIGHT };
         ECS::PhysicsSystem_t        physics;
         ECS::CollisionSystem_t      collision;
 

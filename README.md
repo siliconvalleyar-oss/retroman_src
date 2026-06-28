@@ -1,12 +1,14 @@
 # Retroman
 
 Retro arcade game engine in C++17 using tinyPTC over X11 on Linux.
+ECS architecture with separate component storage.
 
 ## Requirements
 
 - `g++` with C++17 support
 - X11 development libraries (`libx11-dev`, `libxext-dev`)
-- tinyPTC (static library in `lib/tinyPTC/libtinyptc.a`)
+- tinyPTC (`lib/tinyPTC/libtinyptc.a`)
+- picoPNG (`lib/picoPNG/libpicopng.a`)
 
 ## Build
 
@@ -27,27 +29,34 @@ make cleanall     # remove objects and binary
 │   ├── main.hpp              # (reserved)
 │   ├── cmp/
 │   │   ├── entity.hpp        # Entity_t component
-│   │   └── entity.cpp
+│   │   ├── entity.cpp
+│   │   └── physics.hpp       # PhysicsComponent_t
 │   ├── sys/
-│   │   ├── rendersystem.hpp  # RenderSystem_t (rendering)
+│   │   ├── rendersystem.hpp  # RenderSystem_t
 │   │   ├── rendersystem.cpp
-│   │   ├── physics.hpp       # PhysicsSystem_t (movement)
+│   │   ├── physics.hpp       # PhysicsSystem_t
 │   │   ├── physics.cpp
-│   │   ├── collision.hpp     # CollisionSystem_t (bounds)
+│   │   ├── collision.hpp     # CollisionSystem_t
 │   │   └── collision.cpp
 │   ├── man/
-│   │   ├── entitymanager.hpp # EntityManager_t (entity pool)
-│   │   └── entitymanager.cpp
+│   │   ├── entitymanager.hpp # EntityManager_t
+│   │   ├── entitymanager.cpp
+│   │   ├── componentstorage.hpp # ComponentStorage_t
+│   │   └── componentstorage.cpp
 │   └── util/
 │       ├── gamecontext.hpp   # GameContext_t abstract base
-│       └── typealiases.hpp   # VecEntities_t alias
+│       └── typealiases.hpp   # Vect_t, EntityID_t
 ├── lib/
-│   ├── tinyPTC/              # Precompiled static library
-│   └── picoPNG/              # PNG decoding library
+│   ├── tinyPTC/              # tinyPTC static library
+│   └── picoPNG/              # picoPNG static library
+├── png/                      # Sprite assets (PNG/JPG)
+├── assets/                   # Additional assets
 ├── docs/
 │   ├── RULES.md              # Versioning rules
 │   ├── ARCHITECTURE.md       # Architecture documentation
 │   └── API.md                # API reference
+├── scripts/
+│   └── release.sh            # Automated release script
 ├── VERSION                   # Current version
 ├── Makefile                  # Build system
 └── .mimocode/skills/retroman/ # Project skill
@@ -63,12 +72,12 @@ make cleanall     # remove objects and binary
 
 ## Include Convention
 
-Relative quoted includes, not angle-bracket system-style. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md#include-convention).
+Relative quoted includes (see `docs/ARCHITECTURE.md`).
 
 ## Versioning
 
-Version is defined in `VERSION` and mirrored as Git tags with `v` prefix (e.g. `v2.5.2`). See [`docs/RULES.md`](docs/RULES.md).
+Version in `VERSION`, mirrored as `v<VERSION>` tags. See `docs/RULES.md`.
 
 ## License
 
-Practice project. tinyPTC is licensed under GPLv2.
+Practice project. tinyPTC is GPLv2.

@@ -6,7 +6,7 @@ All types reside in the `ECS` namespace.
 
 ## `Entity_t` — `src/cmp/entity.hpp`
 
-Data component representing a renderable game entity with position, velocity, dimensions, and sprite data.
+Renderable game entity with an optional physics component.
 
 ### Fields
 
@@ -18,74 +18,61 @@ Data component representing a renderable game entity with position, velocity, di
 | `vy` | `uint32_t` | Vertical velocity (pixels/frame) |
 | `w` | `uint32_t` | Sprite width in pixels |
 | `h` | `uint32_t` | Sprite height in pixels |
-| `sprite` | `std::vector<uint32_t>` | Flat RGBA pixel data (row-major, size = w×h) |
+| `sprite` | `std::vector<uint32_t>` | Packed RGBA pixel data (XRGB) |
+| `phy` | `PhysicsComponent_t*` | Pointer to physics component (nullable) |
+| `entityID` | `EntityID_t` | Unique auto-incrementing identifier |
 
 ### Constructors
 
 ```cpp
 explicit Entity_t(uint32_t w, uint32_t h);
 ```
+Creates a blank sprite of given dimensions.
 
-Allocates `sprite` with `w×h` pixels (zero-initialised).
+```cpp
+explicit Entity_t(const std::string& filename);
+```
+Loads a PNG file via picoPNG, converts RGBA byte data to packed XRGB `uint32_t` pixels.
+
+### Static Members
+
+```cpp
+static EntityID_t nextID;
+```
+Auto-incrementing counter for generating unique entity IDs.
 
 ---
 
-```cpp
-explicit Entity_t(std::string filename);
-```
+## `PhysicsComponent_t` — `src/cmp/physics.hpp`
 
-Loads a PNG file via picoPNG, decodes it, and populates `sprite`, `w`, `h` from the image data.
+Pure data component holding position and velocity.
 
-### Methods
-
-```cpp
-bool has_physics();
-```
-
-Returns `true` — indicates this entity should be processed by physics/collision systems.
-
-### Destructor
-
-```cpp
-~Entity_t() = default;
-```
+| Field | Type | Description |
+|-------|------|-------------|
+| `x` | `uint32_t` | Position X |
+| `y` | `uint32_t` | Position Y |
+| `vx` | `uint32_t` | Velocity X |
+| `vy` | `uint32_t` | Velocity Y |
 
 ---
 
 ## `GameContext_t` — `src/util/gamecontext.hpp`
 
-Abstract base class providing a common interface for entity storage.
-All systems receive a `GameContext_t&` to access entities.
-
-### Methods (pure virtual)
-
-```cpp
-virtual const VecEntities_t& getEntities() const = 0;
-```
-
-Read-only access to the entity vector.
-
----
-
-```cpp
-virtual VecEntities_t& getEntities() = 0;
-```
-
-Mutable access to the entity vector (for systems that modify entities).
-
-### Destructor
+Abstract interface for entity and component access.
 
 ```cpp
 virtual ~GameContext_t() = default;
+virtual const Vect_t<Entity_t>& getEntities() const = 0;
+virtual Vect_t<Entity_t>& getEntities() = 0;
+virtual const std::vector<PhysicsComponent_t>& getPhysicsComponent() const = 0;
+virtual std::vector<PhysicsComponent_t>& getPhysicsComponent() = 0;
 ```
-
-Polymorphic destructor for safe deletion through base pointer.
 
 ---
 
 ## `EntityManager_t` — `src/man/entitymanager.hpp`
 
-Manages the entity pool. Inherits from `GameContext_t`.
+Entity pool implementing `GameContext_t`. Owns entity vector and `ComponentStorage_t`.
 
 ### Constants
 
@@ -93,89 +80,58 @@ Manages the entity pool. Inherits from `GameContext_t`.
 |------|-------|-------------|
 | `kNUMINITIALENTITIES` | `1000` | Pre-allocated capacity |
 
-### Constructor
+### Methods
 
 ```cpp
 explicit EntityManager_t();
 ```
-
-Reserves space for `kNUMINITIALENTITIES` entities.
-
-### Methods
+Reserves entity and physics component storage.
 
 ```cpp
 void createEntity(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint32_t color);
 ```
+Creates an entity with a solid-colour sprite and an associated physics component.
 
-Creates a new entity with the given position, dimensions, and fill color.
+```cpp
+void createEntity(uint32_t x, uint32_t y, const std::string& filename);
+```
+Creates an entity from a PNG file with an associated physics component.
 
 ---
 
+## `ComponentStorage_t` — `src/man/componentstorage.hpp`
+
+RAII component storage. Non-copyable.
+
 ```cpp
-const VecEntities_t& getEntities() const override;
-VecEntities_t& getEntities() override;
+PhysicsComponent_t& createPhysicsComponent();
+std::vector<PhysicsComponent_t>& getPhysicsComponent();
+const std::vector<PhysicsComponent_t>& getPhysicsComponent() const;
 ```
-
-Returns a const or mutable reference to the internal entity vector.
-
-### Private Members
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `m_Entity` | `VecEntities_t` | Internal entity storage |
 
 ---
 
 ## `RenderSystem_t` — `src/sys/rendersystem.hpp`
 
-Rendering system: owns the framebuffer, draws entity sprites via `GameContext_t`, interfaces with tinyPTC.
+TinyPTC window and framebuffer rendering.
 
 ### Constants
 
 | Name | Value | Description |
 |------|-------|-------------|
-| `kR` | `0x00FF0000` | Red channel mask |
-| `kG` | `0x0000FF00` | Green channel mask |
-| `kB` | `0x000000FF` | Blue channel mask |
-| `msprite` | `uint32_t[64]` | Static 8×8 test sprite pattern |
-
-### Constructor
-
-```cpp
-explicit RenderSystem_t(uint32_t width, uint32_t height);
-```
-
-Opens a tinyPTC window of `width`×`height` pixels and allocates the framebuffer.
-
-### Destructor
-
-```cpp
-~RenderSystem_t();
-```
-
-Closes the tinyPTC window.
+| `kR` | `0x00FF0000` | Red mask |
+| `kG` | `0x0000FF00` | Green mask |
+| `kB` | `0x000000FF` | Blue mask |
+| `msprite[64]` | — | Static 8×8 test sprite |
 
 ### Methods
 
 ```cpp
+explicit RenderSystem_t(uint32_t width, uint32_t height);
+~RenderSystem_t();
 bool update(const GameContext_t& ctx) const;
+void drawAllEntities(const Vect_t<Entity_t>& entities) const;
 ```
-
-Per-frame update:
-1. Fill framebuffer with background colour (`0x00999999`)
-2. Call `drawAllEntities(ctx.getEntities())`
-3. Push framebuffer to screen via `ptc_update()`
-4. Poll events via `ptc_process_events()`
-
-Returns `true` while the window is open, `false` on close/quit.
-
----
-
-```cpp
-void drawAllEntities(const VecEntities_t& entities) const;
-```
-
-Renders all entities using a lambda that blits each sprite to the framebuffer at its `(x, y)` position. Copies each sprite row into the correct scanline, accounting for the framebuffer pitch (`m_w`).
 
 ### Private Members
 
@@ -183,77 +139,48 @@ Renders all entities using a lambda that blits each sprite to the framebuffer at
 |-------|------|-------------|
 | `m_w` | `uint32_t` | Framebuffer width |
 | `m_h` | `uint32_t` | Framebuffer height |
-| `m_framebuffer` | `std::unique_ptr<uint32_t[]>` | Pixel buffer (m_w × m_h) |
+| `m_framebuffer` | `unique_ptr<uint32_t[]>` | Pixel buffer |
 
 ---
 
 ## `PhysicsSystem_t` — `src/sys/physics.hpp`
 
-Velocity-based movement system. Updates entity positions each frame.
-
-### Constructor
-
-```cpp
-PhysicsSystem_t();
-```
-
-### Destructor
-
-```cpp
-~PhysicsSystem_t();
-```
-
-### Methods
-
 ```cpp
 bool update(GameContext_t& g) const;
 ```
-
-Iterates all entities. If an entity reaches the screen boundary (640×360), its velocity is reversed to simulate a bounce.
+Adds velocity to position for every `PhysicsComponent_t`.
 
 ---
 
 ## `CollisionSystem_t` — `src/sys/collision.hpp`
 
-Screen-edge collision detection and response system.
-
-### Constructor
-
-```cpp
-CollisionSystem_t();
-```
-
-### Destructor
-
-```cpp
-~CollisionSystem_t();
-```
-
-### Methods
-
 ```cpp
 bool update(GameContext_t& g) const;
 ```
-
-Iterates all entities. Detects when an entity exceeds the screen boundaries (640×360), corrects its position, and reverses its velocity.
+Reverses velocity when an entity's physics component reaches screen edge (640×360).
 
 ---
 
 ## Helper Types — `src/util/typealiases.hpp`
 
 ```cpp
-using VecEntities_t = std::vector<Entity_t>;
+template <typename T> using Vect_t = std::vector<T>;
+using EntityID_t = std::size_t;
 ```
 
 ---
 
 ## tinyPTC API (C) — `lib/tinyPTC/src/tinyptc.h`
 
-Thin C wrapper over X11 for pixel-perfect window display.
+| Function | Description |
+|----------|-------------|
+| `ptc_open(title, w, h)` | Create X11 window |
+| `ptc_update(buffer)` | Blit framebuffer to window |
+| `ptc_close()` | Destroy window |
+| `ptc_process_events()` | Returns 1 if active, 0 on quit |
+
+## picoPNG API (C++) — `lib/picoPNG/src/picopng.hpp`
 
 | Function | Description |
 |----------|-------------|
-| `ptc_open(title, w, h)` | Create an X11 window |
-| `ptc_update(buffer)` | Blit framebuffer to window |
-| `ptc_close()` | Destroy window and free resources |
-| `ptc_process_events()` | Check for X11 events (returns 1 if active, 0 on quit) |
+| `decodePNG(out, w, h, in, insize)` | Decode PNG to RGBA bytes |

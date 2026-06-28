@@ -71,7 +71,9 @@ See [`docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md) for full documentation.
 | `ECS::PhysicsSystem_t` | `src/sys/physics.hpp` | Velocity-based movement and bounce |
 | `ECS::CollisionSystem_t` | `src/sys/collision.hpp` | Screen-edge collision detection |
 | `ECS::EntityManager_t` | `src/man/entitymanager.hpp` | Entity lifecycle, storage, GameContext_t impl |
-| `ECS::Entity_t` | `src/cmp/entity.hpp` | Position, velocity, dimensions, pixel sprite |
+| `ECS::Entity_t` | `src/cmp/entity.hpp` | Position, velocity, dimensions, pixel sprite, physics pointer |
+| `ECS::PhysicsComponent_t` | `src/cmp/physics.hpp` | Pure position/velocity data component |
+| `ECS::ComponentStorage_t` | `src/man/componentstorage.hpp` | RAII component vector manager |
 
 ## Key Files
 

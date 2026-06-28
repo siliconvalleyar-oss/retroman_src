@@ -3,16 +3,13 @@
 
 namespace ECS {
 
-/// Update all entity positions by adding velocity each frame.
-/// @param g  Game context providing mutable entity access
-/// @return   true on success
+/// Add velocity to the position of every physics component.
 bool PhysicsSystem_t::update(GameContext_t& g) const
 {
-    for (auto& e : g.getEntities())
+    for (auto& phy : g.getPhysicsComponent())
     {
-        // Apply velocity to position
-        e.x += e.vx;
-        e.y += e.vy;
+        phy.x += phy.vx;
+        phy.y += phy.vy;
     }
     return true;
 }
