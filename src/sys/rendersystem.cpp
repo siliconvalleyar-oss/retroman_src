@@ -55,11 +55,16 @@ void RenderSystem_t::drawAllEntities(const Vect_t<Entity_t>& entities) const
 
         for (int32_t row = 0; row < clipH; ++row, dst += m_w, src += static_cast<std::size_t>(e.w))
         {
-            for (int32_t col = 0; col < clipW; ++col)
+            auto sp = src;
+            auto dp = dst;
+            auto end = sp + clipW;
+            while (sp < end)
             {
-                uint32_t px = src[col];
-                if ((px >> 24) != 0)        // skip fully transparent pixels
-                    dst[col] = px;
+                uint32_t px = *sp;
+                if ((px >> 24) != 0)
+                    *dp = px;
+                ++sp;
+                ++dp;
             }
         }
     };

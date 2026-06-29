@@ -44,8 +44,10 @@ LIBS		+= -lX11 -lXext
 #para el uso commando es make DEBUG=1
 ifdef DEBUG 
 	CFLAGS += -g
+	CCFLAGS += -g
 else
 	CFLAGS += -O3
+	CCFLAGS += -O3
 endif
 
 
