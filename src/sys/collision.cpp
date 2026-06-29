@@ -8,8 +8,8 @@ namespace ECS {
 /// (640x360) and reverse velocity on contact, correcting position.
 bool CollisionSystem_t::update(GameContext_t& g) const
 {
-    constexpr int32_t kSCRW{640};
-    constexpr int32_t kSCRH{360};
+    constexpr int32_t kSCRW{900};
+    constexpr int32_t kSCRH{600};
 
     for (auto& e : g.getEntities())
     {

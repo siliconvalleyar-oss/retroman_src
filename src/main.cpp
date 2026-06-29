@@ -13,8 +13,8 @@ extern "C" {
 #include "util/gamecontext.hpp"
 
 /// Screen resolution constants.
-constexpr uint32_t kSCRWIDTH  { 640 };
-constexpr uint32_t kSCRHEIGHT { 360 };
+constexpr uint32_t kSCRWIDTH  { 900 };
+constexpr uint32_t kSCRHEIGHT { 600 };
 
 /// Program entry point.
 /// Creates an entity manager, renderer, physics and collision systems,
