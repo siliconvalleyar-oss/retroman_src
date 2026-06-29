@@ -27,9 +27,9 @@ int main(void)
 
         // Spawn test entities with PNG sprites
         // Spawn test entities with different sprites
-        entityMan.createEntity(20,  40,  "assets/bell.png");
-        entityMan.createEntity(120, 50,  "assets/bottle.png");
-        entityMan.createEntity(260, 60,  "assets/runner.png");
+        entityMan.createEntity(20,  40,  "assets/ninja_00.png");
+        entityMan.createEntity(200, 50,  "assets/enemy.png");
+        entityMan.createEntity(400, 60,  "assets/runner.png");
 
         // Create ECS systems
         const ECS::RenderSystem_t   render   { kSCRWIDTH, kSCRHEIGHT };
